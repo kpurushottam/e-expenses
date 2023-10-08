@@ -16,7 +16,7 @@ class GenericSMSViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
     fun onBind(position: Int, sms: GenericSMS) {
         Log.d("MyExpense", "Expense Item drawn position: $position")
-        txtGenericSms.text = sms.message
+        txtGenericSms.text = sms.body
     }
 
 }

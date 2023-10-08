@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.krp.android.expense.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,11 +46,14 @@ class ExpenseMessagesFragment: Fragment() {
 
         if (cursor?.moveToFirst() == true) { // must check the result to prevent exception
             do {
-                var msgData = ""
+//                var msgData = ""
+                val map = hashMapOf<String, String?>()
                 for (idx in 0 until cursor.columnCount) {
-                    msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx)
+//                    msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx) + "\n"
+                    map[cursor.getColumnName(idx)] = cursor.getString(idx)
                 }
-                messages.add(GenericSMS(message = msgData))
+//                messages.add(GenericSMS(body = msgData))
+                messages.add(Gson().fromJson(Gson().toJson(map), GenericSMS::class.java))
                 // use msgData
             } while (cursor.moveToNext())
         } else {
