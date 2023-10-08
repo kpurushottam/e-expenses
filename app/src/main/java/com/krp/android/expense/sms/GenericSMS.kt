@@ -47,46 +47,87 @@ data class GenericSMS(
     val seen: String? = "",
     @SerializedName("priority")
     val priority: String? = "",
+    @SerializedName("m_size")
     val mSize: String? = "",
+    @SerializedName("oppo_drafts")
     val oppoDrafts: String? = "",
+    @SerializedName("oppo_mass")
     val oppoMass: String? = "",
+    @SerializedName("oppo_timer")
     val oppoTimer: String? = "",
+    @SerializedName("oppo_groupaddress")
     val oppoGroupAddress: String? = "",
-    val oppoCollect: String? = "",
+    @SerializedName("oppo_collected")
+    val oppoCollected: String? = "",
+    @SerializedName("oppo_sub_date")
     val oppoSubDate: String? = "",
+    @SerializedName("oppo_service_message_sms_type")
     val oppoServiceMessageSmsType: String? = "",
+    @SerializedName("bubble")
     val bubble: String? = "",
+    @SerializedName("deleted")
     val deleted: String? = "",
+    @SerializedName("sync_state")
     val syncState: String? = "",
+    @SerializedName("sync_id")
     val syncId: String? = "",
+    @SerializedName("oppo_message_url")
     val oppoMessageUrl: String? = "",
+    @SerializedName("oppo_sms_type")
     val oppoSmsType: String? = "",
+    @SerializedName("block_type")
     val blockType: String? = "",
+    @SerializedName("favourite")
     val favourite: String? = "",
+    @SerializedName("rcs_message_id")
     val rcsMessageId: String? = "",
+    @SerializedName("rcs_file_name")
     val rcsFileName: String? = "",
+    @SerializedName("rcs_mime_type")
     val rcsMimeType: String? = "",
+    @SerializedName("rcs_msg_type")
     val rcsMsgType: String? = "",
+    @SerializedName("rcs_msg_state")
     val rcsMsgState: String? = "",
+    @SerializedName("rcs_chat_type")
     val rcsChatType: String? = "",
+    @SerializedName("rcs_conversation_id")
     val rcsConversationId: String? = "",
+    @SerializedName("rcs_contribution_id")
     val rcsContributionId: String? = "",
+    @SerializedName("rcs_file_selector")
     val rcsFileSelector: String? = "",
+    @SerializedName("rcs_file_transfered")
     val rcsFileTransfered: String? = "",
+    @SerializedName("rcs_file_transfer_id")
     val rcsFileTransferId: String? = "",
+    @SerializedName("rcs_file_icon")
     val rcsFileIcon: String? = "",
+    @SerializedName("rcs_burn")
     val rcsBurn: String? = "",
+    @SerializedName("rcs_header")
     val rcsHeader: String? = "",
+    @SerializedName("rcs_file_path")
     val rcsFilePath: String? = "",
+    @SerializedName("rcs_is_download")
     val rcsIsDownload: String? = "",
+    @SerializedName("rcs_file_size")
     val rcsFileSize: String? = "",
+    @SerializedName("rcs_thumb_path")
     val rcsThumbPath: String? = "",
+    @SerializedName("rcs_extend_body")
     val rcsExtendBody: String? = "",
+    @SerializedName("rcs_media_played")
     val rcsMediaPlayed: String? = "",
+    @SerializedName("rcs_ext_contact")
     val rcsExtContact: String? = "",
+    @SerializedName("rcs_file_record")
     val rcsFileRecord: String? = "",
+    @SerializedName("rcs_transfer_date")
     val rcsTransferDate: String? = "",
+    @SerializedName("rcs_group_at_reminds")
     val rcsGroupAtReminds: String? = "",
+    @SerializedName("rcs_audio_read")
     val rcsAudioRead: String? = "",
 ) {
 
