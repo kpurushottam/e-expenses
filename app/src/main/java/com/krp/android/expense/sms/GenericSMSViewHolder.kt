@@ -1,5 +1,6 @@
 package com.krp.android.expense.sms
 
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ class GenericSMSViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
     fun onBind(position: Int, sms: GenericSMS) {
+        Log.d("MyExpense", "Expense Item drawn position: $position")
         txtGenericSms.text = sms.message
     }
 

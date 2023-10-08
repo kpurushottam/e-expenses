@@ -4,15 +4,18 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.krp.android.expense.R
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -25,7 +28,7 @@ class ExpenseMessagesFragment: Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             liveMessages.postValue(reteriveMessagesFromPhone(context))
         }
     }
@@ -53,7 +56,9 @@ class ExpenseMessagesFragment: Fragment() {
             // empty box, no SMS
         }
         cursor?.close()
-        return messages
+        return messages.also {
+            Log.d("MyExpense", "Expense List is ${it.size}")
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,8 +82,14 @@ class ExpenseMessagesFragment: Fragment() {
         }
 
         liveMessages.observe(viewLifecycleOwner) {
+            Log.d("MyExpense", "Expense List change observed ${it?.size}, listAdapter is $listAdapter")
             it?.let {
+                messages.addAll(it)
                 listAdapter?.notifyDataSetChanged()
+                //
+                with(view.findViewById<TextView>(R.id.txt_item_count)) {
+                    text = "Count: ${it.size}"
+                }
             }
         }
     }
