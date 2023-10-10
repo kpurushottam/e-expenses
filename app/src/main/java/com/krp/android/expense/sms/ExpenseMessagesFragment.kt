@@ -68,6 +68,10 @@ class ExpenseMessagesFragment: Fragment() {
     }
 
     private fun GenericSMS.isCreditDebitSms(): Boolean {
+        val regex = Regex("((INR\\s*\\d+(\\.|\\,){0,1}\\d{1,2})|(Rs(\\.){0,1}\\s*\\d+(\\.|\\,){0,1}\\d{1,2}))")
+        (body?.contains(regex) == true).also {
+            isCreditDebitSms = it
+        }
         return true
     }
 

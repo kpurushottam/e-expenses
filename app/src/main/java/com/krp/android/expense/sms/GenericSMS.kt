@@ -131,6 +131,10 @@ data class GenericSMS(
     val rcsAudioRead: String? = "",
 ) {
 
+    var isCreditSms = false
+    var isDebitSms = false
+    var isCreditDebitSms = false
+
     fun a() {
         Gson()
     }
