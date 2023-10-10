@@ -23,14 +23,14 @@ import kotlinx.coroutines.launch
 class ExpenseMessagesFragment: Fragment() {
 
     private val messages = arrayListOf <GenericSMS>()
-    private val liveMessages = MutableLiveData<List<GenericSMS>?>()
+    private val liveMessages = MutableLiveData<GenericSMS>()
 
     private var listAdapter: ExpenseMessagesAdapter? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         lifecycleScope.launch(Dispatchers.IO) {
-            liveMessages.postValue(reteriveMessagesFromPhone(context))
+            reteriveMessagesFromPhone(context)
         }
     }
 
@@ -39,7 +39,7 @@ class ExpenseMessagesFragment: Fragment() {
      * public static final String SENT = "content://sms/sent";
      * public static final String DRAFT = "content://sms/draft";
      */
-    private fun reteriveMessagesFromPhone(context: Context): List<GenericSMS> {
+    private fun reteriveMessagesFromPhone(context: Context) {
         val messages = arrayListOf<GenericSMS>()
         val cursor: Cursor? =
             context.contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
@@ -50,16 +50,25 @@ class ExpenseMessagesFragment: Fragment() {
                 for (idx in 0 until cursor.columnCount) {
                     map[cursor.getColumnName(idx)] = cursor.getString(idx)
                 }
-                messages.add(Gson().fromJson(Gson().toJson(map), GenericSMS::class.java))
+                val sms = Gson().fromJson(Gson().toJson(map), GenericSMS::class.java)
+                if (sms.isCreditDebitSms()) {
+                    messages.add(sms)
+                    liveMessages.postValue(sms)
+                    Log.d("MyExpense", "Posted sms ${sms.id}\n${sms.body}\n\n")
+                }
                 // use msgData
             } while (cursor.moveToNext())
         } else {
             // empty box, no SMS
         }
         cursor?.close()
-        return messages.also {
+        messages.also {
             Log.d("MyExpense", "Expense List is ${it.size}")
         }
+    }
+
+    private fun GenericSMS.isCreditDebitSms(): Boolean {
+        return true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,21 +91,23 @@ class ExpenseMessagesFragment: Fragment() {
             }
         }
 
-        liveMessages.observe(viewLifecycleOwner) {
-            Log.d("MyExpense", "Expense List change observed ${it?.size}, listAdapter is $listAdapter")
-            it?.let {
-                messages.addAll(it)
-                listAdapter?.notifyDataSetChanged()
-                //
-                with(view.findViewById<TextView>(R.id.txt_item_count)) {
-                    text = "Count: ${it.size}"
-                }
+        liveMessages.observe(viewLifecycleOwner) { sms ->
+            val currentCount = messages.size
+            messages.add(sms)
+            listAdapter?.notifyItemRangeInserted(currentCount, (messages.size - currentCount))
+            //
+            with(view.findViewById<TextView>(R.id.txt_item_count)) {
+                text = "Count: ${messages.size}"
             }
         }
     }
 
-    override fun onDetach() {
+    override fun onDestroyView() {
         liveMessages.removeObservers(viewLifecycleOwner)
+        super.onDestroyView()
+    }
+
+    override fun onDetach() {
         super.onDetach()
     }
 
