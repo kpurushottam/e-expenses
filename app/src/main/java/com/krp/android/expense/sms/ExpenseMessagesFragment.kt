@@ -1,6 +1,7 @@
 package com.krp.android.expense.sms
 
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -8,7 +9,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -93,6 +98,19 @@ class ExpenseMessagesFragment: Fragment() {
             adapter = ExpenseMessagesAdapter(messages).also {
                 listAdapter = it
             }
+        }
+        with(view.findViewById<Button>(R.id.btn_btn1)) {
+            val shortcut = ShortcutInfoCompat.Builder(context, "${System.currentTimeMillis()}")
+                .setShortLabel("Website")
+                .setLongLabel("Open the website")
+                .setIcon(IconCompat.createWithResource(context, R.drawable.icon_shortcuts_30fps))
+                .setIntent(
+                    Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://www.mysite.example.com/"))
+                )
+                .build()
+
+            ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
         }
 
         liveMessages.observe(viewLifecycleOwner) { sms ->
