@@ -3,6 +3,10 @@ package com.krp.android.expense.sms
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -103,7 +107,8 @@ class ExpenseMessagesFragment: Fragment() {
             val shortcut = ShortcutInfoCompat.Builder(context, "${System.currentTimeMillis()}")
                 .setShortLabel("Website")
                 .setLongLabel("Open the website")
-                .setIcon(IconCompat.createWithResource(context, R.drawable.icon_shortcuts_30fps))
+//                .setIcon(IconCompat.createWithResource(context, R.drawable.icon_shortcuts_30fps))
+                .setIcon(IconCompat.createWithBitmap(textAsBitmap("1", 15f, Color.GREEN)!!))
                 .setIntent(
                     Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://www.mysite.example.com/"))
@@ -122,6 +127,20 @@ class ExpenseMessagesFragment: Fragment() {
                 text = "Count: ${messages.size}"
             }
         }
+    }
+
+    fun textAsBitmap(text: String?, textSize: Float, textColor: Int): Bitmap? {
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.textSize = textSize
+        paint.color = textColor
+        paint.textAlign = Paint.Align.LEFT
+        val baseline = -paint.ascent() // ascent() is negative
+        val width = (paint.measureText(text) + 0.5f).toInt() // round
+        val height = (baseline + paint.descent() + 0.5f).toInt()
+        val image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(image)
+        canvas.drawText(text!!, 0f, baseline, paint)
+        return image
     }
 
     override fun onDestroyView() {
