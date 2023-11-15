@@ -15,21 +15,24 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.krp.android.expense.R
+import com.krp.android.expense.viewmodel.GenericSMSViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 class ExpenseMessagesFragment: Fragment() {
 
-    private val messages = arrayListOf <GenericSMS>()
     private val liveMessages = MutableLiveData<GenericSMS>()
 
+    private lateinit var smsViewModel: GenericSMSViewModel
     private var listAdapter: ExpenseMessagesAdapter? = null
 
     override fun onAttach(context: Context) {
@@ -93,6 +96,13 @@ class ExpenseMessagesFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        smsViewModel = ViewModelProvider(
+            requireActivity(),
+            requireActivity().defaultViewModelProviderFactory
+        )[GenericSMSViewModel::class.java]
+        //
+        val messages = smsViewModel.messages
+        //
         with(view.findViewById<RecyclerView>(R.id.container_expenses_sms)) {
             layoutManager = LinearLayoutManager(view.context)
             adapter = ExpenseMessagesAdapter(messages).also {

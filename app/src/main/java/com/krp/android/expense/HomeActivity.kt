@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.viewModels
+import com.krp.android.expense.sms.ExpenseGraphFragment
 import com.krp.android.expense.sms.ExpenseMessagesFragment
+import com.krp.android.expense.viewmodel.GenericSMSViewModel
 import com.permissionx.guolindev.PermissionX
 
 /**
@@ -16,6 +19,9 @@ import com.permissionx.guolindev.PermissionX
  * https://github.com/PhilJay/MPAndroidChart
  */
 class HomeActivity : AppCompatActivity() {
+
+    private val viewModel by viewModels<GenericSMSViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -45,6 +51,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun loadExpenseGraph() {
-
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container_content, ExpenseGraphFragment(), ExpenseGraphFragment::class.java.simpleName)
+            .commitAllowingStateLoss()
     }
 }
