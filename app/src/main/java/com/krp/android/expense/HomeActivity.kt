@@ -1,8 +1,10 @@
 package com.krp.android.expense
 
 import android.Manifest
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import com.krp.android.expense.sms.ExpenseMessagesFragment
@@ -36,6 +38,11 @@ class HomeActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_draw_graph).setOnClickListener {
             loadExpenseGraph()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d("Shortcuts", "requestCode $requestCode resultCode $resultCode data ${data?.extras}")
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun loadExpenseMessages() {

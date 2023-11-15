@@ -1,7 +1,9 @@
 package com.krp.android.expense.sms
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -15,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -25,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.krp.android.expense.R
+import com.krp.android.expense.util.ShortcutUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -41,6 +45,21 @@ class ExpenseMessagesFragment: Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             reteriveMessagesFromPhone(context)
         }
+
+        context.registerReceiver(object: BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                Toast.makeText(context, "Added to Home Screen", Toast.LENGTH_LONG).show()
+                Log.d("Shortcuts", "Added")
+
+            }
+        }, IntentFilter(Intent.ACTION_CREATE_SHORTCUT))
+
+        ShortcutUtil.requestPinShortcutForReservation(
+            context, // Context
+            "1",
+            "My Stay Dago",
+            "Open my stay Bobobox Pods Dago",
+        )
     }
 
     /**
