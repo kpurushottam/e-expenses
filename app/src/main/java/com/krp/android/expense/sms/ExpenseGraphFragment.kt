@@ -21,8 +21,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.google.gson.Gson
 import com.krp.android.expense.R
+import com.krp.android.expense.util.getAmounts
 import com.krp.android.expense.viewmodel.GenericSMSViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,6 +61,28 @@ class ExpenseGraphFragment: Fragment() {
         )[GenericSMSViewModel::class.java]
         //
         val messages = smsViewModel.messages
+        //
+        if (messages.isNotEmpty()) {
+            val lineData = LineData(LineDataSet(messages.mapIndexed { smsIndex, sms ->
+                val entry = Entry(smsIndex.toFloat(), 0F)
+                sms.getAmounts().forEachIndexed { amountIndex, amount ->
+                    entry.y = amountIndex.toFloat()
+                    entry.data = amount.also { finalAmount ->
+                        Log.d("ExpenseAmount", finalAmount)
+                    }
+                }
+                entry
+            }, "Amount"))
+
+            with(view.findViewById<LineChart>(R.id.container_expenses_graph)) {
+                data = lineData
+                description = Description().apply {
+                    text = "Expenses"
+                }
+                animateXY(500, 500)
+                invalidate()
+            }
+        }
         //
         with(view.findViewById<TextView>(R.id.txt_item_count)) {
             text = "Count: ${messages.size}"

@@ -26,6 +26,7 @@ import com.krp.android.expense.R
 import com.krp.android.expense.viewmodel.GenericSMSViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.krp.android.expense.util.isCreditDebitSms
 
 
 class ExpenseMessagesFragment: Fragment() {
@@ -73,14 +74,6 @@ class ExpenseMessagesFragment: Fragment() {
         messages.also {
             Log.d("MyExpense", "Expense List is ${it.size}")
         }
-    }
-
-    private fun GenericSMS.isCreditDebitSms(): Boolean {
-        val regex = Regex("((INR\\s*\\d+(\\.|\\,){0,1}\\d{1,2})|(Rs(\\.){0,1}\\s*\\d+(\\.|\\,){0,1}\\d{1,2}))")
-        (body?.contains(regex) == true).also {
-            isCreditDebitSms = it
-        }
-        return true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
