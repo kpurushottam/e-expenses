@@ -28,6 +28,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.google.gson.Gson
 import com.krp.android.expense.R
+import com.krp.android.expense.util.ExpenseSmsUtility.parseAmount
 import com.krp.android.expense.util.getAmounts
 import com.krp.android.expense.viewmodel.GenericSMSViewModel
 import kotlinx.coroutines.Dispatchers
@@ -64,11 +65,13 @@ class ExpenseGraphFragment: Fragment() {
         //
         if (messages.isNotEmpty()) {
             val lineData = LineData(LineDataSet(messages.mapIndexed { smsIndex, sms ->
-                val entry = Entry(smsIndex.toFloat(), 0F)
+                val entry = Entry(smsIndex.toFloat(), 0F) // default 0 entry for normal sms
                 sms.getAmounts().forEachIndexed { amountIndex, amount ->
-                    entry.y = amountIndex.toFloat()
-                    entry.data = amount.also { finalAmount ->
-                        Log.d("ExpenseAmount", finalAmount)
+                    // override value with credit-debit amount sms
+                    val parsedAmount = amount.parseAmount()
+                    entry.y = parsedAmount
+                    entry.data = parsedAmount.also { finalAmount ->
+                        Log.d("ExpenseAmount", finalAmount.toString() + " : msg - ${sms.body}")
                     }
                 }
                 entry
